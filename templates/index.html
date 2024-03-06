@@ -1,0 +1,160 @@
+
+{% extends 'base_template.html' %}
+
+
+{% block content %}
+<div id="main_block">
+<div id="unclicked_box">
+	<p id="reload_button">New word</p>
+	<!-- syllables appear here-->
+</div>
+<div id="proposition_box"></div>
+	<!-- syllables move here when clicked-->
+</div>
+
+<script type="text/javascript">
+
+	function sleep(ms) {
+	  return new Promise(resolve => setTimeout(resolve, ms));
+	}
+
+	function shuffle(array) {
+	  let currentIndex = array.length,  randomIndex;
+
+	  // While there remain elements to shuffle.
+	  while (currentIndex > 0) {
+
+	    // Pick a remaining element.
+	    randomIndex = Math.floor(Math.random() * currentIndex);
+	    currentIndex--;
+
+	    // And swap it with the current element.
+	    [array[currentIndex], array[randomIndex]] = [
+	      array[randomIndex], array[currentIndex]];
+	  }
+
+	  return array;
+	}
+
+	function syllable_clicked(){
+		
+		/*move syllable*/
+		this.classList.toggle("clicked");
+		parent_id=this.parentNode.id;
+		if (parent_id=="unclicked_box"){
+			propo_box=document.getElementById("proposition_box");
+			propo_box.append(this);
+		}else{
+			unclicked_box=document.getElementById("unclicked_box");
+			unclicked_box.append(this);
+		}
+
+		/*if unclicked is empty, check result*/
+		var unclicked=document.getElementById("unclicked_box");
+		var first_child=unclicked.querySelector(".syllable");
+		if (first_child==null){
+			check_result();
+		}
+	}
+
+	function check_result(){
+		/*checks order of syllables in submitted box*/
+		console.log("check!");
+		var syllables=  document.getElementsByClassName("syllable");
+		console.log("uu",syllables);
+		var prev=-1;
+		var correct=1;
+		for (i in syllables){
+			if (i=="item"){break;}; /*cochonnerie à la fin de la liste*/
+			syllable=syllables[i];
+			/*id=syllable.getAttribute("syllable_id"); doesnt work for some reason*/
+			classes_=syllable.classList;
+			classes_=Array.from(classes_); /*sinon ça iterate sur tout un tas de functions et de bordel qui sont dans la classList*/
+
+			/*find the id of this syllable*/
+			for (i in classes_){
+				class_=classes_[i];
+				if (class_.startsWith("syllable_id")){
+					a=class_.split("_"); /*syllable_id10*/
+					id=a[1]; /*id10*/
+					id=id.slice(2); /*10*/
+					id=parseInt(id,10);
+					break;
+					}
+				
+			}
+			console.log(id,prev);
+			if (id<prev){correct=0;break;}
+			else{prev=id;}
+		}
+		propo_block=document.getElementById("proposition_box");
+		if (correct==1){
+			propo_block.classList.add("correct");
+			propo_block.classList.remove("incorrect"); /*si le joueur a fait une proposition, ça a dit incorrect, puis qu'il a corrigé, incorrect est déjà là*/
+			console.log("correct!");
+			/*sleep(2000).then(() => {new_word_clicked();});*/
+		}else{
+			propo_block.classList.add("incorrect");
+			propo_block.classList.remove("correct");
+			console.log("incorrect!");
+		}
+	}
+
+	function new_word_clicked(){
+
+		/*remove previous word if necessary*/
+		list=  document.getElementsByClassName("syllable");
+		while (list.length>0){
+			var current_syllable=list[0];
+			current_syllable.remove();
+		}
+		propo_block=document.getElementById("proposition_box");
+		propo_block.classList.remove("correct");
+		propo_block.classList.remove("incorrect");
+
+
+		/*select word to do*/
+		var lexique=["ca-pi-ta-le","au-to-ri-sa-tion","exac-ti-tu-de"];
+		var index_pick = Math.floor(Math.random() * lexique.length);
+		var pick=lexique[index_pick];
+
+
+		/*break syllables and create html elements*/
+		pick=pick.split("-");
+		var list_syllables_elements=[];
+
+		for (syllable_index in pick){
+			var syllable=pick[syllable_index];
+			syllable_box=document.createElement("p");
+			syllable_box.classList.add("syllable");
+			syllable_box.setAttribute("syllable_id",syllable_index) /*doesnt work when retrieving, so using a class instead, even if it's stupid*/
+			syllable_box.classList.add("syllable_id"+syllable_index)
+			syllable_box.textContent=syllable;
+			syllable_box.addEventListener("click",syllable_clicked)
+			list_syllables_elements.push(syllable_box);
+		}
+
+		console.log(list_syllables_elements);
+
+		/*shuffle and places html elements*/
+		shuffle(list_syllables_elements);
+		var parent_div=document.getElementById("unclicked_box");
+		for (i in list_syllables_elements){
+			syllable_element=list_syllables_elements[i];
+			console.log("a",syllable_element);
+			parent_div.appendChild(syllable_element);
+		}
+
+	}
+
+	new_word_clicked(); /*at first load, simulates a click to request a new word*/
+
+	reload_button=document.getElementById("reload_button")
+	reload_button.addEventListener("click",new_word_clicked)
+
+
+
+
+</script>
+
+{% endblock %}

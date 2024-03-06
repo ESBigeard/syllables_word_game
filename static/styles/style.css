@@ -1,0 +1,174 @@
+body{
+padding-left:5px;
+padding-right:5px;
+background: url('../bg.jpg');
+background-size: cover;
+font-family : 'Roboto Slab';
+color:white;
+}
+
+#main_block{ 
+margin-left:auto;
+margin-right:auto;
+width:600px;
+text-align:center;
+}
+
+#unclicked_box{
+height:200px;
+}
+
+.syllable{
+display:inline;
+width:100px;
+height:50px;
+padding:10px;
+margin:10px;
+border:1px white solid;
+}
+
+
+.clicked{
+color:black;
+background:white;
+}
+
+#proposition_box{
+height:200px;
+}
+
+.correct{
+background:green;
+}
+.incorrect{
+background:red;
+}
+
+p{
+color:white;
+}
+
+h1 img{
+position:absolute;
+height:200px;
+left:50%;
+width:360px;
+margin-left:-180px;
+top:5px;
+z-index:-1;
+}
+
+#menu{
+text-align:center;
+font-size:16pt;
+font-family: Oswald;
+margin-top:150px;
+background-color:rgba(255,255,255,0.4);
+color:#28154a;
+margin-bottom:15px;
+}
+
+#menu p{
+color: #4a2589;
+}
+
+#menu a{
+text-decoration:none; /*remove underline*/
+padding-left:10px;
+padding-right:10px;
+padding-right:20px;
+padding-left:20px;
+color:#381773;
+}
+
+
+
+
+#black_overlay{
+background-color:black;
+opacity:1;
+display:none;
+height:100%;
+width:100%;
+position:fixed;
+}
+
+
+
+.hidden-back{ /*gets applied to #images_main_block when the overlay is open*/
+opacity:0.3;
+transition: opacity .9s;
+}
+
+#images_overlay{ /*show 1 selected image in the foreground of the main page*/
+display:none;
+align-items:center;
+justify-content:center;
+position: fixed;
+top:0;
+width:100%;
+height:100%;
+overflow:scroll;
+text-align:center;
+vertical-align:middle;
+}
+
+
+#about_content{ /*page "about" */
+width:70%;
+margin-left:auto;
+margin-right:auto;
+background-color:rgba(0,0,0,0.6);
+padding:20px;
+border-radius:20px;
+}
+
+#writing_header{ /*page "writing" */
+width:70%;
+margin-left:auto;
+margin-right:auto;
+padding:20px;
+border-radius:20px;
+}
+
+#writing_block{
+width:70%;
+margin-left:auto;
+margin-right:auto;
+background-color:rgba(0,0,0,0.6);
+padding:20px;
+border-radius:20px;
+overflow:scroll;
+}
+
+
+#writing_block a{
+color:white;
+text-decoration:none;
+}
+
+.center{
+text-align:center;
+}
+
+.whitespace{
+height:50px;
+}
+
+#links_block{
+border-collapse:collapse;
+border:0;
+margin-left:auto;
+margin-right:auto;
+width:300px;
+}
+
+
+#links_block td{
+text-align:center;
+}
+
+.link_box img{
+width:80px;
+height:80px;
+}

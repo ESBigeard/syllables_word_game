@@ -22,10 +22,6 @@ def normalise_unicode(s,diac=True):
 	"""
 	#note : if you look at the code of the example above, the double backslashes are escaped single backslashes. those are to be read as single backslashes
 
-	try:
-		s=unicode(s)
-	except UnicodeDecodeError:
-		s=s.decode("utf-8")
 	
 
 	if diac:
@@ -50,7 +46,7 @@ def normalise_unicode(s,diac=True):
 def lexique_parseur(fname,maxi=1000):
 	"""takes lexicon files from lexique.org and convert them in a list of words, where each word is a list of syllabes
 	maxi : maximum amount of words to extract"""
-	with codecs.open(fname,"r","iso-8859-15") as f:
+	with open(fname,mode="r",encoding="iso-8859-15") as f:
 		lexique=set()
 		for l in f:
 			if l[0]=="<": #header of the file
@@ -63,7 +59,8 @@ def lexique_parseur(fname,maxi=1000):
 				syllabes=l[-1]
 				syllabes=normalise_unicode(syllabes,False)
 				if syllabes.count("-")>2: #word is at least 3 syllabes long
-					lexique.add(syllabes)
+					if syllabes.count("-")<6: #max 5 syllabes
+						lexique.add(syllabes)
 
 			if len(lexique)>maxi:
 				break
@@ -97,10 +94,10 @@ def display(lexique,mode="syllabe",debug=False):
 	if mode not in ["syllabe","random"]:
 		raise TypeError("mode must be syllabe or random")
 	
-	print "Essayez de deviner le mot dont les syllabes ont été mélangées "
-	print "Tapez ? pour donner votre langue au chat"
-	print "Tapez exit pour quitter le jeu"
-	print "Les syllabes sont données sans leurs accents, mais vous pouvez mettre des accents dans votre réponse si vous voulez"
+	print("Essayez de deviner le mot dont les syllabes ont été mélangées ")
+	print("Tapez ? pour donner votre langue au chat")
+	print("Tapez exit pour quitter le jeu")
+	print("Les syllabes sont données sans leurs accents, mais vous pouvez mettre des accents dans votre réponse si vous voulez")
 
 	while True:
 		answer=random.sample(lexique,1)[0]
@@ -121,27 +118,27 @@ def display(lexique,mode="syllabe",debug=False):
 		while "".join(mystery)==answer:
 			random.shuffle(mystery)
 		while True:
-			print "\t".join(mystery)
-			prop=raw_input()
+			print("\t".join(mystery))
+			prop=input()
 			prop=normalise_unicode(prop,False)
 			
 			if debug:
-				print "answer",answer
-				print "prop",prop
+				print("answer",answer)
+				print("prop",prop)
 
 			if prop.startswith("?"):
-				print "La réponse était",answer
+				print("La réponse était",answer)
 				break
 
 			if prop.lower().startswith("exit"):
 				exit()
 
 			if prop == answer:
-				print "Bravo !"
-				print "Nouveau mot :"
+				print("Bravo !")
+				print("Nouveau mot :")
 				break
 			else:
-				print "Non, essayez encore"
+				print("Non, essayez encore")
 
 if __name__=="__main__":
 	#lexique=lexique_parseur("lexique.txt") #this takes all words no matter their part of speech
